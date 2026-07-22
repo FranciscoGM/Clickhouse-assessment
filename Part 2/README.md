@@ -33,12 +33,13 @@ We could go <i>further left</i> by implementing static IaC and security checks (
 	-	What are the issues with the Dockerfile?
 #################################################################################
 
+
 1. The Dockerfile uses an outdated base image. Ubuntu 18.04 is EOL since May 2023, potentially leaving it exposed to unpatched vulnerabilities
 2. The container runs as root, potentially allowing an attacker to escape the container and gain full control over the host system.
 3. There are hardcoded secrets in the Dockerfile (DB_PASSWORD and API_KEY), leaving them exposed to anyone with access to the image.
 4. Overly broad filesystem permissions are granted to /app, breaking the least privilege principle and unnecessarily granting full access to all users.
 5. Potentially unneeded packages are installed (vim, curl, dnsutils) that could pose additional unnecesary risk expanding the attack surface.
-6. The Dockerfile copies the entire context blindly (COPY . /app) without a <i>.dockerignore</d> file, which may potentially include sensitive files.
+6. The Dockerfile copies the entire context blindly (COPY . /app) without a <i>.dockerignore</i> file, which may potentially include sensitive files.
 7. Unsafe port 80 is exposed, which may be avoided.
 
 
@@ -46,5 +47,6 @@ We could go <i>further left</i> by implementing static IaC and security checks (
 #################################################################################
 <h3>How would you prevent the misconfigurations from being introduced/applied to the environment for both files?</h3>
 #################################################################################
+
 
 To prevent misconfigurations from being introduced to the environment by CFN templates and Dockerfiles I would integrate static IaC and security checks using tools like Trivy and configuring pre-commit hooks.

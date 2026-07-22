@@ -1,7 +1,7 @@
 <h2>Tasks</h2>
 
 #################################################################################
-<h3>-	CloudFormation template</h3>
+<h3>CloudFormation template</h3>
 	-	Identify at least three security issues with the CloudFormation template.
 	-	Write an improved version of the CloudFormation template that follows AWS security best practices.
 	-	Assuming the user with these permissions exists in the environment, how would you go about finding misconfigurations like this and how would you fix this?
@@ -29,7 +29,7 @@ We could go <i>further left</i> by implementing static IaC and security checks (
 
 
 #################################################################################
-<h3>-	Dockerfile</h3>
+<h3>Dockerfile</h3>
 	-	What are the issues with the Dockerfile?
 #################################################################################
 

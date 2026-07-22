@@ -1,0 +1,43 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Secure CloudFormation template addressing least-privilege IAM, and S3 encryption and public access controls.
+Resources:
+  MyBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+  MyRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: SecureS3AccessRole
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: !Sub "arn:aws:iam::${AWS::AccountId}:root"
+            Action:
+              - sts:AssumeRole
+      MaxSessionDuration: 3600
+      Policies:
+        - PolicyName: S3BucketRestrictedAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Sid: ListBucket
+                Effect: Allow
+                Action:
+                  - s3:ListBucket
+                Resource: !GetAtt MyBucket.Arn
+              - Sid: GetObjectAccess
+                Effect: Allow
+                Action:
+                  - s3:GetObject
+                Resource: !Sub "${MyBucket.Arn}/*"

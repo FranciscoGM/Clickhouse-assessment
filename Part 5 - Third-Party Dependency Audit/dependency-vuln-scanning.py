@@ -50,7 +50,8 @@ def run_snyk_test(snyk_path: str, scan_dir: Path) -> dict:
     if proc.returncode not in SNYK_OK_EXIT_CODES:
         # Exit codes 2/3 (or anything unexpected) indicate the scan itself failed.
         stderr_snippet = (proc.stderr or "").strip()[:500]
-        raise RuntimeError(f"snyk test failed (exit code {proc.returncode}). {stderr_snippet}")
+        raise RuntimeError(f"snyk test failed (exit code {proc.returncode}). {stderr_snippet}"
+        )
 
     stdout = (proc.stdout or "").strip()
     if not stdout:
@@ -78,9 +79,11 @@ def extract_findings(scan_result: dict | list) -> list[dict[str, str]]:
             package_name = vuln.get("packageName") or vuln.get("name") or "unknown"
             package_version = vuln.get("version") or "unknown"
 
-            vuln_types = vuln.get("identifiers", {}).get("CWE") if isinstance(vuln.get("identifiers"), dict)
-            else None
-            vulnerability_type = (vuln.get("title")
+            vuln_types = vuln.get("identifiers", {}).get("CWE") if isinstance(
+                vuln.get("identifiers"), dict
+            ) else None
+            vulnerability_type = (
+                vuln.get("title")
                 or (", ".join(vuln_types) if vuln_types else None)
                 or vuln.get("severity")
                 or "unknown"

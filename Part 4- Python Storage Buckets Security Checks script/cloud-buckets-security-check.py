@@ -4,6 +4,12 @@ import boto3, argparse, csv, sys
 from dataclasses import dataclass, asdict
 from typing import List, Optional
 
+logging.basicConfig(
+    level=logging.WARNING,
+    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+)
+log = logging.getLogger("cloud_bucket_audit")
+
 # For output
 @dataclass
 class BucketRecord:

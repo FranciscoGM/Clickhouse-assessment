@@ -98,7 +98,7 @@ def audit_gcp(project_id: Optional[str] = None) -> List[BucketRecord]:
         return records
 
     for bucket in buckets:
-        public = _gcp_check_public(bucket)
+        public = _gcp_check_public(bucket)CloudFormationSecure.yaml
         encrypted = _gcp_check_encryption(bucket)
         records.append(BucketRecord("GCP", bucket.name, public, encrypted))
 
@@ -229,15 +229,12 @@ def write_csv_report(records: List[BucketRecord], output_path: str) -> None:
         for r in records:
             row = asdict(r)
             writer.writerow({k: row[k] for k in fieldnames})
-    log.info("Wrote %d records to %s", len(records), output_path)
 
 
 def print_summary(records: List[BucketRecord]) -> None:
     total = len(records)
     public_count = sum(1 for r in records if r.public_access == "Yes")
     unencrypted_count = sum(1 for r in records if r.encryption_enabled == "No")
-    log.info("Summary: %d bucket(s) scanned | %d publicly accessible | %d without encryption",
-              total, public_count, unencrypted_count)
     if public_count:
         log.warning("%d bucket(s) are PUBLICLY accessible — review immediately.", public_count)
     if unencrypted_count:
@@ -263,15 +260,12 @@ def main():
     all_records: List[BucketRecord] = []
 
     if "aws" in args.providers:
-        log.info("Auditing AWS S3 buckets...")
         all_records.extend(audit_aws(profile=args.aws_profile, region=args.aws_region))
 
     if "gcp" in args.providers:
-        log.info("Auditing GCP GCS buckets...")
         all_records.extend(audit_gcp(project_id=args.gcp_project))
 
     if "azure" in args.providers:
-        log.info("Auditing Azure Blob Storage containers...")
         all_records.extend(audit_azure(subscription_id=args.azure_subscription_id))
 
     if not all_records:

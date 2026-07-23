@@ -9,21 +9,21 @@
 
 #################################################################################
 
-<h4>Identify at least three security issues with the CloudFormation template.</h4>
+<h4>1. Identify at least three security issues with the CloudFormation template.</h4>
 
 1. Instead of using role-based acces, an IAM user is created with an inline policy attached granting full permissions, effectively giving admin access to everything on the AWS account.
 2. The S3 bucket is created without the <i>BucketEncryption</i> property, meaning data at rest may not be encrypted.
 3. The S3 bucket is created without the <i>PublicAccessBlockConfiguration</i> property, meaning that no access controls or public access protection are implemented.
 
 
-<h4>Write an improved version of the CloudFormation template that follows AWS security best practices.</h4>
+<h4>2. Write an improved version of the CloudFormation template that follows AWS security best practices.</h4>
 
-Solution in the <b>CloudFormationSecure.yaml</b> file included in the repo.
+Solution in the `CloudFormationSecure.yaml` file included in the repo.
 
 
-<h4>Assuming the user with these permissions exists in the environment, how would you go about finding misconfigurations like this and how would you fix this?</h4>
+<h4>3. Assuming the user with these permissions exists in the environment, how would you go about finding misconfigurations like this and how would you fix this?</h4>
 
-Assuming a user with full permissions exist in the AWS environment, I would leverage AWS native tools like AWS Config, Trusted Advisor or Security Hub (third-party tools could also be used) to identify misconfigurations like this one, not aligned with security best-practices.
+Assuming a user with full permissions exist in the AWS environment, I would leverage AWS native tools like AWS Config, Trusted Advisor or Security Hub (third-party tools, like Prowler, could also be used) to identify misconfigurations like this one, not aligned with security best-practices.
 
 To fix it, I would update the IaC ensuring least privilege is applied, prioritizing the use of roles over IAM users.
 

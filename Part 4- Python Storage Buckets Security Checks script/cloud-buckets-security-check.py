@@ -98,7 +98,7 @@ def audit_gcp(project_id: Optional[str] = None) -> List[BucketRecord]:
         return records
 
     for bucket in buckets:
-        public = _gcp_check_public(bucket)CloudFormationSecure.yaml
+        public = _gcp_check_public(bucket)
         encrypted = _gcp_check_encryption(bucket)
         records.append(BucketRecord("GCP", bucket.name, public, encrypted))
 

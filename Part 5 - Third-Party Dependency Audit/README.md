@@ -27,3 +27,62 @@ No critical vulnerabilities were reported. The table below lists the high-severi
 1. lodash@4.17.10 Prototype Pollution - "https://snyk-patches.s3.amazonaws.com/npm/lodash/20200430/lodash_0_0_20200430_6baae67d501e4c45021280876d42efe351e77551.patch"
 2. lodash@4.17.10 Prototype Pollution - "https://snyk-patches.s3.amazonaws.com/npm/lodash/20200430/lodash_0_0_20200430_6baae67d501e4c45021280876d42efe351e77551.patch"
 3. qs@6.3.1 Prototype Override Protection Bypass - "https://snyk-patches.s3.amazonaws.com/npm/qs/20170213/630_632.patch"
+
+#########################################################################################
+# dependency-vuln-scanning.py
+
+A Python script that automates third-party dependency vulnerability scanning for Node.js projects. It runs `snyk test` against a project's `package.json`, parses the results, and exports them to a CSV report.
+
+
+## Prerequisites
+
+Install and authenticate the Snyk CLI (one-time setup):
+
+```bash
+npm install -g snyk
+snyk auth
+```
+
+## Available Arguments
+
+| Argument | Required? | Default | Description |
+|---|---|---|---|
+| `--path` | No | `.` (current directory) | Directory containing the `package.json` to scan |
+| `--output` | No | `snyk_vulnerabilities.csv` | Path/filename for the CSV report |
+
+## Output
+
+The generated CSV includes the following columns:
+
+| Column | Description |
+|---|---|
+| `package_name` | Name of the vulnerable package |
+| `package_version` | Installed version of the package |
+| `vulnerability_type` | Vulnerability title / CWE classification / severity |
+| `remediation_steps` | Suggested fix (upgrade path, patch, or monitoring guidance) |
+
+## Usage Examples
+
+**Run with all defaults** (scans current directory, writes `snyk_vulnerabilities.csv` in the same directory):
+
+```bash
+python3 snyk_scan.py
+```
+
+**Specify a project path only:**
+
+```bash
+python3 snyk_scan.py --path /path/to/project
+```
+
+**Specify a custom output file only:**
+
+```bash
+python3 snyk_scan.py --output reports/vuln_report.csv
+```
+
+**Specify both:**
+
+```bash
+python3 snyk_scan.py --path /path/to/project --output reports/vuln_report.csv
+```

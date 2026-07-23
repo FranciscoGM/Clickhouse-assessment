@@ -15,14 +15,14 @@ Uses each provider's standard SDK credential chain (no hardcoded credentials):
 ## Install
 
 ```
-pip install boto3 google-cloud-storage azure-identity \
+pip3 install boto3 google-cloud-storage azure-identity \
             azure-mgmt-storage azure-storage-blob
 ```
 
 ## Usage
 
 ```
-python cloud_bucket_audit.py \
+python3 cloud_bucket_audit.py \
     --gcp-project my-gcp-project \
     --azure-subscription-id 00000000-0000-0000-0000-000000000000 \
     --output bucket_report.csv \

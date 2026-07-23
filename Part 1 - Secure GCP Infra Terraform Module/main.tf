@@ -1,26 +1,4 @@
 ##############################################################################
-# General note:
-# - When no specific configuration is mentioned, default values have been used
-#   as far as security was not compromised.
-# Architecture notes:
-# - The GCP Global external HTTP(S) Load Balancer is an anycast service at
-#   Google's edge (GFE) and is NOT bound to a subnet the way a regional LB
-#   is, even though the assignment's requirement mentioned "A Global HTTP 
-#   Load Balancer in the public subnet";
-# - The Compute Engine instance sits in the private subnet with NO external
-#   IP. Outbound internet access (e.g. for OS patching) is provided via
-#   Cloud NAT rather than a public IP.
-# - The LB terminates TLS (443) at the edge and forwards plain HTTP (80) to
-#   the backend instance, matching the required firewall posture exactly:
-#     Internet  -> LB        : HTTPS/443
-#     LB (GFE)  -> Instance  : HTTP/80
-#     Trusted IP-> Instance  : SSH/22
-# - Firewall rule for "LB -> instance" uses Google's documented GFE /
-#   health-check source ranges (130.211.0.0/22, 35.191.0.0/16), which is
-#   the actual mechanism GCP uses to identify LB-originated traffic.
-##############################################################################
-
-##############################################################################
 # VPC + Subnets
 ##############################################################################
 
@@ -121,16 +99,10 @@ resource "google_service_account" "vm_sa" {
   display_name = "VM-service-account"
 }
 
-# Only the roles that the VM would need to ship logs and metrics.
+# Least-privilege IAM role: Only the role that the VM would need to ship logs.
 resource "google_project_iam_member" "vm_sa_log_writer" {
   project = var.project_id
   role    = "roles/logging.logWriter"
-  member  = "serviceAccount:${google_service_account.vm_sa.email}"
-}
-
-resource "google_project_iam_member" "vm_sa_metric_writer" {
-  project = var.project_id
-  role    = "roles/monitoring.metricWriter"
   member  = "serviceAccount:${google_service_account.vm_sa.email}"
 }
 
@@ -169,7 +141,7 @@ resource "google_compute_instance" "app_vm" {
 }
 
 ##############################################################################
-# Load Balancer
+# Global HTTP Load Balancer
 ##############################################################################
 
 resource "google_compute_health_check" "http_health_check" {
@@ -204,10 +176,6 @@ resource "google_compute_backend_service" "app_backend" {
     group = google_compute_instance_group.app_group.id
   }
 }
-
-##############################################################################
-# Global HTTPS Load Balancer
-##############################################################################
 
 resource "google_compute_url_map" "app_url_map" {
   name            = "app-url-map"

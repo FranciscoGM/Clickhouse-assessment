@@ -156,7 +156,8 @@ def main() -> int:
         print(f"[*] Scanning {scan_dir} with Snyk...")
         scan_result = run_snyk_test(snyk_path, scan_dir)
         rows = extract_findings(scan_result)
-        write_csv(rows, Path(args.output).expanduser().resolve())
+        output_path = Path(args.output).expanduser().resolve()
+        write_csv(rows, output_path)
         print(f"[+] Scan complete. {len(rows)} vulnerabilities found.")
         print(f"[+] Report written to: {output_path}")
         return 0

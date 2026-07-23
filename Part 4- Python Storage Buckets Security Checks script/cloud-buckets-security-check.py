@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import boto3, argparse, csv, sys
+import boto3, argparse, csv, sys, logging
 from dataclasses import dataclass, asdict
 from typing import List, Optional
 
